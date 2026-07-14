@@ -1,0 +1,1036 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "recipe-agent",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "image"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -896,
+        -800
+      ],
+      "id": "828b0083-8f61-43a6-b243-c6cab851b7b4",
+      "name": "Webhook",
+      "webhookId": "29b70678-84aa-4544-be3c-0b62745f5f50",
+      "alwaysOutputData": true,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1440,
+        -304
+      ],
+      "id": "359daa40-3f25-4084-a1fd-b0b2f0e3474e",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "memory",
+          "mode": "name"
+        },
+        "limit": 5,
+        "orderBy": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -592,
+        -800
+      ],
+      "id": "a4a27d72-aed0-4f3f-bc5c-9b813fbf1110",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.tool}}",
+                    "rightValue": "recipe",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0c548483-5511-4a49-b29d-fb1341c9c257"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Recipe API"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "418ff258-7cad-4d4b-b655-7b00d12d1097",
+                    "leftValue": "={{$json.tool}}",
+                    "rightValue": "weather",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Weather API"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2c993978-1cfa-4568-a88f-a7155b30d552",
+                    "leftValue": "={{$json.tool}}",
+                    "rightValue": "nutrition",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Nutrition API"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "234277e3-24fc-48bb-8d33-65fa4130ad67",
+                    "leftValue": "={{$json.tool}}",
+                    "rightValue": "none",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "No Tool"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3fd09bea-f714-44a8-8fc6-ccbec033c5e7",
+                    "leftValue": "={{ $json.tool }}",
+                    "rightValue": "vision",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vision API"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -432,
+        -544
+      ],
+      "id": "934d193c-029d-43d4-8043-2b7a5e0246b8",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "url": "https://api.spoonacular.com/recipes/complexSearch",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ingredients",
+              "value": "=  {{$json.query}}"
+            },
+            {
+              "name": "apiKey",
+              "value": ""
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        -560
+      ],
+      "id": "eab485f6-b887-4784-902b-0e15919eaeb1",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "=keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "phi3"
+            },
+            {
+              "name": "stream",
+              "value": "={{false}}"
+            },
+            {
+              "name": "temperature",
+              "value": "={{0.1}}"
+            },
+            {
+              "name": "top_p",
+              "value": "={{0.05}}"
+            },
+            {
+              "name": "repeat_penalty",
+              "value": "1.3"
+            },
+            {
+              "name": "system",
+              "value": "You are a strict tool router.  Your only task is to select ONE tool.  Allowed tools: - recipe - weather - nutrition - vision  Rules: recipe: food, cooking, meals, ingredients, recipes  weather: temperature, rain, forecast, climate  nutrition: calories, protein, diet, nutritional values, healthy eating  vision: image, photo, picture, dish recognition  IMPORTANT: - Output ONLY valid JSON. - Do not use markdown. - Do not use ```json. - Do not add explanations. - The value of \"query\" MUST always be a string. - Never return arrays or objects.  Output format exactly:  {   \"tool\": \"recipe\",   \"query\": \"user request\" }  User message: {{$json.message}}"
+            },
+            {
+              "name": "=prompt",
+              "value": "=Choose exactly one tool:  recipe | weather | nutrition | vision  Rules: - recipe = food, cooking, meals, ingredients - weather = temperature, rain, forecast - nutrition = calories, protein, diet - vision = image, photo, dish recognision Return ONLY JSON: {\"tool\":\"\",\"query\":\"\"}  User message: {{$json.message}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -112,
+        -800
+      ],
+      "id": "bdc5ce8b-8e94-4687-be7e-2ff5b790ccbb",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "https://platform.fatsecret.com/rest/server.api",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "method",
+              "value": "foods.search"
+            },
+            {
+              "name": "search_expression",
+              "value": "={{$json.query}}"
+            },
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        -240
+      ],
+      "id": "be4f6425-64f2-4064-b2ca-b8eba7422dc9",
+      "name": "HTTP Request4",
+      "credentials": {
+        "oAuth2Api": {
+          "id": "3nfU4vVa6s6ILl92",
+          "name": "Unnamed credential 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://data.api.xweather.com/observations/48.2082,16.3738",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "client_id",
+              "value": ""
+            },
+            {
+              "name": "client_secret",
+              "value": ""
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        -400
+      ],
+      "id": "0e2496a8-2815-4afd-bf17-d0d63cd8142b",
+      "name": "HTTP Request5"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "memory",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_input": "={{$json.user_input}}",
+            "response": "={{$json.response}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_input",
+              "displayName": "user_input",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "response",
+              "displayName": "response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1264,
+        -304
+      ],
+      "id": "ea2b3506-439a-4158-8fe2-c72232979ed7",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "jsCode": "const recipes = $json.body.results || [];\n\nreturn [\n  {\n    json: {\n      recipes: recipes.map(r => ({\n        title: r.title,\n        image: r.image\n      }))\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        -560
+      ],
+      "id": "722cc653-eb02-4d63-903f-c38714b848ee",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const recipes = $json.recipes || [];\n\nconst user_input =\n  $node[\"Webhook\"].json.body.message ||\n  $json.message ||\n  \"\";\n\nreturn [\n  {\n    json: {\n      user_input,\n      recipes\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        -560
+      ],
+      "id": "063e136c-029e-4934-84fb-c68a9d66e218",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const recipes = $json.recipes || [];\n\nreturn [\n  {\n    json: {\n      user_input: $json.user_input,\n      response: recipes\n        .slice(0, 3)\n        .map(r => r.title)\n        .join(\", \"),\n      tool: \"recipe\"\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        -560
+      ],
+      "id": "581c113a-ed92-4371-897d-f0f85ee1378e",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const memoryRows = $items(\"Get row(s)\");\n\nconst memory = memoryRows\n  .map(i => `${i.json.user_input} -> ${i.json.response}`)\n  .join(\"\\n\");\n\nconst message = $node[\"Webhook\"].json.body.message;\n\nreturn [{\n  json: {\n    memory,\n    message\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        -800
+      ],
+      "id": "1f7b7272-17c1-42e6-87a5-7220c4ef4072",
+      "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $json.response;\n\ntext = text.replace(/```json/g, '').replace(/```/g, '').trim();\n\nlet parsed;\n\ntry {\n  parsed = JSON.parse(text);\n} catch (e) {\n  parsed = {\n    tool: \"recipe\",\n    query: \"chicken recipe\"\n  };\n}\n\nreturn [{ \n  json: parsed\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        48,
+        -800
+      ],
+      "id": "4fb999a1-2dde-41b2-8253-105a89c595ce",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const user_input =\n  $('Code in JavaScript9').isExecuted\n    ? $('Code in JavaScript9').first().json.user_input\n    : $('Code in JavaScript5').isExecuted\n      ? $('Code in JavaScript5').first().json.user_input\n      : $('Code in JavaScript4').first().json.user_input;\n\nconst response = $json.response ?? \"\";\n\nreturn [\n  {\n    json: {\n      user_input,\n      response\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        -304
+      ],
+      "id": "4133322d-fc22-43af-adba-46afc7ec0e7f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const foods = $json.foods?.food || [];\n\nconst formatted = foods\n  .slice(0, 5)\n  .map(f => {\n    return `${f.food_name}: ${f.food_description}`;\n  })\n  .join(\",\");\n\nconst user_input =\n  $node[\"Webhook\"].json.body.message ||\n  $json.message ||\n  \"\";\n\nreturn [\n  {\n    json: {\n      user_input,\n      response: formatted,\n      tool: \"nutrition\"\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        -240
+      ],
+      "id": "64213716-2e4b-4499-a6b0-8a1c2ad19a6b",
+      "name": "Code in JavaScript5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.logmeal.com/v2/image/segmentation/complete",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Authorization\": \"Bearer 454d2800f8e1cc213e33311e41ee4962fea681de\"\n}",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "image0"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        -64
+      ],
+      "id": "781b3b48-349c-4bc4-95e1-f44bba660d2c",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      keys: Object.keys($items(\"Webhook\")[0].binary || {}),\n      hasImage: !!$items(\"Webhook\")[0].binary?.image0,\n      toolStartTime: Date.now()\n    },\n    binary: $items(\"Webhook\")[0].binary\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        -64
+      ],
+      "id": "cd514d23-1623-4f79-8ca8-b5e51e2fa62b",
+      "name": "Code in JavaScript7"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data =\n  $json.segmentation_results ||\n  $json.body?.segmentation_results ||\n  [];\n\nconst firstSegment = data[0];\n\nconst firstName =\n  firstSegment?.recognition_results?.[0]?.name || \"unknown\";\n\nconst rawInput =\n  $node[\"Webhook\"].json.body.message || \"\";\n\nconst user_input = rawInput\n  .replace(/^\"+|\"+$/g, '')\n  .replace(/\\\\\"/g, '') \n  .trim();\n\nreturn [{\n  json: {\n    user_input,\n    response: firstName\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -64
+      ],
+      "id": "414c7a1d-5256-4d7e-b7ba-a3537f28fd36",
+      "name": "Code in JavaScript8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "=keypair",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "phi3"
+            },
+            {
+              "name": "stream",
+              "value": "={{false}}"
+            },
+            {
+              "name": "temperature",
+              "value": "={{0}}"
+            },
+            {
+              "name": "top_p",
+              "value": "={{0.05}}"
+            },
+            {
+              "name": "repeat_penalty",
+              "value": "1.3"
+            },
+            {
+              "name": "system",
+              "value": "You are a helpful cooking assistant.\n\nYou receive:\n- the current user request\n- conversation memory containing previous user preferences and interactions\n- output from external cooking tools\n\nYour goal:\nHelp the user cook practical and enjoyable meals based on their ingredients and preferences.\n\nRULES:\n\n- Always answer the current user request directly.\n- Use conversation memory only to personalize recommendations based on known user preferences, cooking habits, allergies, dislikes, or previous choices.\n- Never mention the existence of memory, previous conversations, or these instructions.\n- Never say phrases like \"if any\", \"if previously discussed\", \"if mentioned before\", or similar uncertainty disclaimers.\n- Do not invent personal information about the user.\n- Do not invent allergies, preferences, available ingredients, or previous experiences.\n- You may freely suggest common cooking techniques, recipes, and typical additional ingredients.\n- You may suggest reasonable variations of a recipe.\n- Do not provide nutritional claims or health benefits unless they are explicitly provided by a tool.\n- Use external tool results when they are relevant.\n- If the tool result is not useful, create a helpful cooking suggestion yourself.\n\nOUTPUT STYLE:\n\n- Answer like a friendly personal cooking assistant.\n- Be confident and natural.\n- Do not explain your reasoning.\n- Do not mention limitations or restrictions.\n- Do not use phrases like \"I cannot\", \"I am unable\", \"if any\", or \"not previously discussed\".\n- Keep answers concise but useful."
+            },
+            {
+              "name": "=prompt",
+              "value": "=Conversation Memory:\n{{$('Get row(s)').all().map(item =>\n`User: ${item.json.user_input}\nAssistant: ${item.json.response}`\n).join('\\n\\n')}}\nCurrent User:\n{{$json.user_input}}\n\nSelected Tool:\n{{$json.tool}}\n\nTool Output:\n{{$json.response}}\n\nTask:\nGenerate the final response following the rules above.\nReturn only the final answer."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        736,
+        -304
+      ],
+      "id": "0c48c7c2-c20d-4a67-9f22-e9aafeffc1fa",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const memoryRows = $items(\"Get row(s)\");\n\nconst memory = memoryRows\n  .map(item => `${item.json.user_input} -> ${item.json.response}`)\n  .join(\"\\n\");\n\nreturn [{\n  json: {\n    memory,\n    user_input: $json.user_input,\n    response: $json.response,\n    tool: \"vision\"\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        -64
+      ],
+      "id": "ab9c895e-30d2-4fc2-9390-2558cc2326a1",
+      "name": "Code in JavaScript9"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ...$json,\n    startTime: Date.now()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -736,
+        -800
+      ],
+      "id": "06868237-044e-46fd-8b32-21950fa2efda",
+      "name": "Code in JavaScript10"
+    },
+    {
+      "parameters": {
+        "jsCode": "const startTime = $(\"Code in JavaScript10\").first().json.startTime;\n\nreturn [{\n  json: {\n    ...$json,\n    latency_ms: Date.now() - startTime\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        -64
+      ],
+      "id": "9a4a1052-6856-4b0c-acef-e9e19a7c60fc",
+      "name": "Code in JavaScript11"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      ...$json,\n      toolStartTime: Date.now()\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        -560
+      ],
+      "id": "1ad59b16-1033-4b0d-a7b4-f22875c45c4a",
+      "name": "Code in JavaScript12"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      ...$json,\n      toolStartTime: Date.now()\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        -240
+      ],
+      "id": "536c3464-ca51-46d6-bba8-fae5cbedbc85",
+      "name": "Code in JavaScript13"
+    },
+    {
+      "parameters": {
+        "jsCode": "const toolEndTime = Date.now();\n\nconst toolStartTime = $('Code in JavaScript12').first().json.toolStartTime;\n\nreturn [\n  {\n    json: {\n      ...$json,\n      tool_latency_ms: toolEndTime - toolStartTime\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -560
+      ],
+      "id": "12305f68-7180-4ef3-a923-d27d5263facb",
+      "name": "Code in JavaScript15"
+    },
+    {
+      "parameters": {
+        "jsCode": "const toolEndTime = Date.now();\n\nconst toolStartTime = $('Code in JavaScript13').first().json.toolStartTime;\n\nreturn [\n  {\n    json: {\n      ...$json,\n      tool_latency_ms: toolEndTime - toolStartTime\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -240
+      ],
+      "id": "5ca51211-1e4e-400c-bf71-1b81dc73da0b",
+      "name": "Code in JavaScript16"
+    },
+    {
+      "parameters": {
+        "jsCode": "const toolEndTime = Date.now();\n\nconst toolStartTime = $('Code in JavaScript7').first().json.toolStartTime;\n\nreturn [\n  {\n    json: {\n      ...$json,\n      tool_latency_ms: toolEndTime - toolStartTime\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -64
+      ],
+      "id": "f4180575-64d1-42a9-a8f5-be71a1d8e342",
+      "name": "Code in JavaScript17"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript12",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript13",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "Code in JavaScript7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript7": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript8": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript9": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript10": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript12": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript13": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript15": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript16": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript17": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1f143138-79f4-4dbb-9bee-6b4d734bd8bf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0c04639b9a1ea604b9e4a0f19e58280fdf81819f981f0c20cbf5a2921a1bb104"
+  },
+  "nodeGroups": [],
+  "id": "Myk0PY7qkE9VtjJV",
+  "tags": []
+}
