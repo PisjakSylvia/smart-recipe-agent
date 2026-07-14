@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ChatService } from '../services/chat.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-chat',
@@ -17,7 +18,8 @@ import { ChatService } from '../services/chat.service';
 export class ChatComponent {
 
   constructor(
-    private chatService: ChatService
+    private chatService: ChatService,
+      private cd: ChangeDetectorRef
   ) {}
 
   imageFile?: File;
@@ -67,6 +69,7 @@ this.chatService.sendMessage(
 
     next:(response)=>{
 
+      console.log(response);
 
       this.messages.push({
 
@@ -78,6 +81,7 @@ this.chatService.sendMessage(
 
 
       this.loading=false;
+      this.cd.detectChanges();
 
 
     },
