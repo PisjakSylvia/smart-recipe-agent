@@ -1,0 +1,69 @@
+<div class="chat-container">
+
+  <div class="chat-header">
+    <h2>Smart Recipe Agent</h2>
+  </div>
+
+
+  <div class="messages" #messagesContainer>
+
+    <div 
+      *ngFor="let message of messages"
+      class="message-row"
+      [class.user-row]="message.sender === 'user'"
+      [class.bot-row]="message.sender === 'bot'">
+
+      <div class="avatar">
+        {{ message.sender === 'user' ? '👤' : '🤖' }}
+      </div>
+
+
+      <div class="bubble">
+
+        {{ message.text }}
+
+      </div>
+
+    </div>
+
+
+    <div 
+      *ngIf="loading"
+      class="message-row bot-row">
+
+      <div class="avatar">
+        🤖
+      </div>
+
+      <div class="bubble typing">
+        Agent schreibt...
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="input-area">
+
+    <input
+      [(ngModel)]="input"
+      (keyup.enter)="send()"
+      placeholder="Nachricht an Smart Agent..."
+    />
+    <input 
+  type="file"
+  accept="image/*"
+  (change)="onFileSelected($event)"
+>
+
+
+    <button (click)="send()">
+      ➤
+    </button>
+
+  </div>
+
+
+</div>
